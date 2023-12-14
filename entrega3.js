@@ -1,3 +1,5 @@
+
+
 let proyectoData = {
     Productos: {
         Remeras: [
@@ -27,11 +29,17 @@ let proyectoData = {
     total: 0
 };
 
+// Recuperar datos del localStorage al cargar la página
+if (localStorage.getItem('productosEnCarro')) {
+    proyectoData.productosEnCarro = JSON.parse(localStorage.getItem('productosEnCarro'));
+    actualizarCuadroResumen(); // Actualizar la visualización de productos en el carro al cargar la página
+}
+
+
 // Mostrar información al usuario usando el DOM
 let mensajeElement = document.getElementById('mensaje');
 let productosLista = document.getElementById('productos-lista');
 let tallesLista = document.getElementById('talles-lista');
-let inputContainer = document.getElementById('inputContainer');
 let carroElement = document.getElementById('carro');
 
 // Inicializar la lista de productos
@@ -129,13 +137,18 @@ function actualizarCuadroResumen() {
     // Limpiar el contenido actual
     listaProductosSeleccionados.innerHTML = '<h2>Productos Seleccionados</h2>';
 
-    // Crear un nuevo elemento para cada producto en el carro
-    proyectoData.productosEnCarro.forEach(producto => {
-        let productoElement = document.createElement('div');
-        productoElement.innerText = `${producto.producto} - Talle: ${producto.talle} - Cantidad: ${producto.cantidad} - Precio: $${producto.precio.toFixed(3)}`;
-        listaProductosSeleccionados.appendChild(productoElement);
-    });
+    if (proyectoData.productosEnCarro.length === 0) {
+        listaProductosSeleccionados.innerHTML = '<p>No hay productos seleccionados.</p>';
+    } else {
+        // Crear un nuevo elemento para cada producto en el carro
+        proyectoData.productosEnCarro.forEach(producto => {
+            let productoElement = document.createElement('div');
+            productoElement.innerText = `${producto.producto} - Talle: ${producto.talle} - Cantidad: ${producto.cantidad} - Precio: $${producto.precio.toFixed(3)}`;
+            listaProductosSeleccionados.appendChild(productoElement);
+        });
+    }
 }
+
 
 
 async function interactuarConUsuario() {
